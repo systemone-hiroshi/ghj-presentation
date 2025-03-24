@@ -34,10 +34,16 @@ interface AmatsuKanagiData {
   philosophy: string;
 }
 
+interface SlideProps {
+  toggleWorksheetMode: () => void;
+  showGalaxyFamilyDetail: (family: GalaxyFamily) => void;
+  toggleAmatsuKanagiDetail: () => void;
+}
+
 interface Slide {
   title: string;
   subtitle: string;
-  content: () => React.ReactNode;
+  content: (props: SlideProps) => React.ReactNode;
 }
 
 // 銀河ファミリーデータ
@@ -154,145 +160,50 @@ const worksheetData = [
   }
 ];
 
-// GHJPresentationコンポーネント
-const GHJPresentation: React.FC = () => {
-  // State管理
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [worksheetMode, setWorksheetMode] = useState(false);
-  const [worksheetIndex, setWorksheetIndex] = useState(0);
-  const [galaxyFamilyDetailMode, setGalaxyFamilyDetailMode] = useState(false);
-  const [selectedGalaxyFamily, setSelectedGalaxyFamily] = useState<GalaxyFamily | null>(null);
-  const [amatsuKanagiDetailMode, setAmatsuKanagiDetailMode] = useState(false);
-  const [userWorksheet, setUserWorksheet] = useState<WorksheetItem[][]>(
-    worksheetData.map(section => section.items.map(item => ({ ...item })))
-  );
-  const [questions, setQuestions] = useState<Question[]>([
-    { question: "GHJの上映会はどのように行われますか？", isOpen: false },
-    { question: "銀河ファミリーとは具体的に何ですか？", isOpen: false },
-    { question: "このワークショップでは何が体験できますか？", isOpen: false },
-    { question: "初めてでも参加できますか？", isOpen: false },
-    { question: "天津金木とは何ですか？", isOpen: false }
-  ]);
-
-  // イベントハンドラ
-  const handleWorksheetChange = useCallback((sectionIndex: number, itemIndex: number, value: string) => {
-    setUserWorksheet(prev => {
-      const newWorksheet = [...prev];
-      newWorksheet[sectionIndex][itemIndex].answer = value;
-      return newWorksheet;
-    });
-  }, []);
-
-  const toggleWorksheetMode = useCallback(() => {
-    setWorksheetMode(!worksheetMode);
-  }, [worksheetMode]);
-
-  const showGalaxyFamilyDetail = useCallback((family: GalaxyFamily) => {
-    setSelectedGalaxyFamily(family);
-    setGalaxyFamilyDetailMode(true);
-  }, []);
-
-  const closeGalaxyFamilyDetail = useCallback(() => {
-    setGalaxyFamilyDetailMode(false);
-    setSelectedGalaxyFamily(null);
-  }, []);
-
-  const toggleAmatsuKanagiDetail = useCallback(() => {
-    setAmatsuKanagiDetailMode(!amatsuKanagiDetailMode);
-  }, [amatsuKanagiDetailMode]);
-
-  // ナビゲーション
-  const goToSlide = useCallback((index: number) => {
-    if (index >= 0 && index < slides.length) {
-      setCurrentSlide(index);
-    }
-  }, []);
-
-  const nextSlide = useCallback(() => {
-    if (currentSlide < slides.length - 1) {
-      setCurrentSlide(currentSlide + 1);
-    }
-  }, [currentSlide]);
-
-  const prevSlide = useCallback(() => {
-    if (currentSlide > 0) {
-      setCurrentSlide(currentSlide - 1);
-    }
-  }, [currentSlide]);
-
-  // キーボードナビゲーション
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowRight') {
-        nextSlide();
-      } else if (e.key === 'ArrowLeft') {
-        prevSlide();
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [nextSlide, prevSlide]);
-
-  // トランジションエフェクト
-  const slideVariants = {
-    enter: { opacity: 0 },
-    center: { opacity: 1 },
-    exit: { opacity: 0 }
-  };
-
-  const modalVariants = {
-    hidden: { opacity: 0, scale: 0.8 },
-    visible: { opacity: 1, scale: 1, transition: { duration: 0.3 } },
-    exit: { opacity: 0, scale: 0.8, transition: { duration: 0.2 } }
-  };
-
-  // スライド定義
-  const slides: Slide[] = [
-    // スライド1: タイトル
-    {
-      title: "グレイトヒーローズジャーニー",
-      subtitle: "魂の解放を促すワークショップ",
-      content: () => (
-        <div className="flex flex-col h-full items-center justify-center text-center">
-          <motion.h1 
-            className="text-5xl font-bold mb-4 text-[#ff7e5f]"
-            initial={{ opacity: 0, y: -30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            グレイトヒーローズジャーニー
-          </motion.h1>
-          <motion.h2 
-            className="text-3xl mb-8 text-[#feb47b]"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-          >
-            魂の解放を促すワークショップ
-          </motion.h2>
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, delay: 0.6 }}
-            className="mb-10"
-          >
-            <div className="w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-[#ff7e5f] to-[#feb47b] shadow-lg mb-4"></div>
-            <p className="text-xl">2025年3月30日（日）in世田谷</p>
-          </motion.div>
-          <motion.p 
-            className="text-lg max-w-2xl"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 1 }}
-          >
-            宇宙の視点から自分の光を見つけていく、参加型ワークショップ＆お話会
-          </motion.p>
-        </div>
-      )
-    },
+// スライド定義 - コンポーネントの外部で定義
+const createSlides = (props: SlideProps): Slide[] => [
+  // スライド1: タイトル
+  {
+    title: "グレイトヒーローズジャーニー",
+    subtitle: "魂の解放を促すワークショップ",
+    content: () => (
+      <div className="flex flex-col h-full items-center justify-center text-center">
+        <motion.h1 
+          className="text-5xl font-bold mb-4 text-[#ff7e5f]"
+          initial={{ opacity: 0, y: -30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+        >
+          グレイトヒーローズジャーニー
+        </motion.h1>
+        <motion.h2 
+          className="text-3xl mb-8 text-[#feb47b]"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.3 }}
+        >
+          魂の解放を促すワークショップ
+        </motion.h2>
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1, delay: 0.6 }}
+          className="mb-10"
+        >
+          <div className="w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-[#ff7e5f] to-[#feb47b] shadow-lg mb-4"></div>
+          <p className="text-xl">2025年3月30日（日）in世田谷</p>
+        </motion.div>
+        <motion.p 
+          className="text-lg max-w-2xl"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: 1 }}
+        >
+          宇宙の視点から自分の光を見つけていく、参加型ワークショップ＆お話会
+        </motion.p>
+      </div>
+    )
+  },
   
   // スライド2: GHJとは？
   {
@@ -1026,6 +937,13 @@ const GHJPresentation: React.FC = () => {
     { question: "初めてでも参加できますか？", isOpen: false },
     { question: "天津金木とは何ですか？", isOpen: false }
   ]);
+  
+  // スライドデータの生成
+  const slides = createSlides({
+    toggleWorksheetMode,
+    showGalaxyFamilyDetail,
+    toggleAmatsuKanagiDetail,
+  });
 
   // イベントハンドラ
   const handleWorksheetChange = useCallback((sectionIndex: number, itemIndex: number, value: string) => {
@@ -1059,13 +977,13 @@ const GHJPresentation: React.FC = () => {
     if (index >= 0 && index < slides.length) {
       setCurrentSlide(index);
     }
-  }, []);
+  }, [slides.length]);
 
   const nextSlide = useCallback(() => {
     if (currentSlide < slides.length - 1) {
       setCurrentSlide(currentSlide + 1);
     }
-  }, [currentSlide]);
+  }, [currentSlide, slides.length]);
 
   const prevSlide = useCallback(() => {
     if (currentSlide > 0) {
@@ -1090,7 +1008,6 @@ const GHJPresentation: React.FC = () => {
   }, [nextSlide, prevSlide]);
 
   // トランジションエフェクト
-  // スライドトランジションを簡素化
   const slideVariants = {
     enter: { opacity: 0 },
     center: { opacity: 1 },
@@ -1441,7 +1358,7 @@ const GHJPresentation: React.FC = () => {
               {/* デバッグ情報 */}
               <div className="text-xs text-gray-400 mb-2">現在のスライド: {currentSlide + 1}</div>
               
-              {/* スライド内容 - AnimatePresenceを一時的に無効化 */}
+              {/* スライド内容 - 簡略化したコンテンツレンダリング */}
               <div className="h-full">
                 {(() => {
                   debugSlide(currentSlide);
