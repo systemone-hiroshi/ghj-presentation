@@ -463,55 +463,39 @@ const slides: Slide[] = [
       <div className="flex flex-col h-full overflow-y-auto">
         <h2 className="text-3xl font-bold mb-6 text-[#ff7e5f]">よくある質問</h2>
         <div className="space-y-4">
-          {questions.map((q, index) => (
-            <motion.div 
+          {[
+            {
+              question: "GHJの上映会はどのように行われますか？",
+              answer: "GHJの上映会では、音楽と映像、そして生のナレーションを組み合わせ、参加者の魂に眠る記憶を呼び覚ます体験を提供します。通常の映画鑑賞とは異なり、より体験型・参加型のイベントとなっています。"
+            },
+            {
+              question: "銀河ファミリーとは具体的に何ですか？",
+              answer: "銀河ファミリーとは、私たち地球人を含む宇宙の様々な存在たちのことです。シリウス、プレアデス、オリオンなど、それぞれの種族はそれぞれの特性を持っており、私たちのDNAには様々な星の特性が組み込まれています。"
+            },
+            {
+              question: "このワークショップでは何が体験できますか？",
+              answer: "このワークショップでは、上映会のシナリオ解説、銀河ファミリーマッピング、天津金木リーディング、統合ワーク、そして光の柱を立てる誘導瞑想などを体験できます。音楽とともに内側から宇宙を旅する時間を味わえます。"
+            },
+            {
+              question: "初めてでも参加できますか？",
+              answer: "はい、初めての方も大歓迎です！「グレイトヒーローズジャーニーってなあに？」という説明から始まり、参加型のワークショップを通して体験していただけます。上映会を観ていない方、宇宙や古神道に詳しくない方も安心してご参加いただけます。"
+            },
+            {
+              question: "天津金木とは何ですか？",
+              answer: "天津金木（あまつかなぎ）は、古神道に伝わる秘儀の一つで「持ち歩く神社」とも言われる神具です。宇宙の四大源力（天・火・水・地）に基づいて、現在のあなたの在り方が宇宙創造の法則に則っているかを示します。"
+            }
+          ].map((item, index) => (
+            <div 
               key={index}
               className="bg-white p-5 rounded-lg shadow-md hover:shadow-lg transition-shadow cursor-pointer"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 + index * 0.1 }}
-              onClick={() => {
-                const newQuestions = [...questions];
-                newQuestions[index].isOpen = !newQuestions[index].isOpen;
-                setQuestions(newQuestions);
-              }}
             >
-              <div className="flex justify-between items-center">
-                <h3 className="text-lg font-bold text-[#4a3933]">{q.question}</h3>
-                <span className="text-[#feb47b] text-xl">
-                  {q.isOpen ? '−' : '+'}
-                </span>
+              <div className="flex justify-between items-center mb-2">
+                <h3 className="text-lg font-bold text-[#4a3933]">{item.question}</h3>
               </div>
-              
-              <AnimatePresence>
-                {q.isOpen && (
-                  <motion.div 
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: 'auto', opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    className="overflow-hidden"
-                  >
-                    <div className="pt-3 mt-3 border-t border-gray-200">
-                      {index === 0 && (
-                        <p>GHJの上映会では、音楽と映像、そして生のナレーションを組み合わせ、参加者の魂に眠る記憶を呼び覚ます体験を提供します。通常の映画鑑賞とは異なり、より体験型・参加型のイベントとなっています。</p>
-                      )}
-                      {index === 1 && (
-                        <p>銀河ファミリーとは、私たち地球人を含む宇宙の様々な存在たちのことです。シリウス、プレアデス、オリオンなど、それぞれの種族はそれぞれの特性を持っており、私たちのDNAには様々な星の特性が組み込まれています。</p>
-                      )}
-                      {index === 2 && (
-                        <p>このワークショップでは、上映会のシナリオ解説、銀河ファミリーマッピング、天津金木リーディング、統合ワーク、そして光の柱を立てる誘導瞑想などを体験できます。音楽とともに内側から宇宙を旅する時間を味わえます。</p>
-                      )}
-                      {index === 3 && (
-                        <p>はい、初めての方も大歓迎です！「グレイトヒーローズジャーニーってなあに？」という説明から始まり、参加型のワークショップを通して体験していただけます。上映会を観ていない方、宇宙や古神道に詳しくない方も安心してご参加いただけます。</p>
-                      )}
-                      {index === 4 && (
-                        <p>天津金木（あまつかなぎ）は、古神道に伝わる秘儀の一つで「持ち歩く神社」とも言われる神具です。宇宙の四大源力（天・火・水・地）に基づいて、現在のあなたの在り方が宇宙創造の法則に則っているかを示します。</p>
-                      )}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
+              <div className="pt-2 border-t border-gray-200">
+                <p>{item.answer}</p>
+              </div>
+            </div>
           ))}
         </div>
       </div>
@@ -923,6 +907,11 @@ const slides: Slide[] = [
   }
 ];
 
+// デバッグ用の関数
+const debugSlide = (index: number) => {
+  console.log(`スライド ${index + 1} をレンダリングしています`);
+};
+
 // GHJPresentationコンポーネント
 const GHJPresentation: React.FC = () => {
   // State管理
@@ -1006,10 +995,11 @@ const GHJPresentation: React.FC = () => {
   }, [nextSlide, prevSlide]);
 
   // トランジションエフェクト
+  // スライドトランジションを簡素化
   const slideVariants = {
-    enter: { opacity: 0, x: 50 },
-    center: { opacity: 1, x: 0 },
-    exit: { opacity: 0, x: -50 }
+    enter: { opacity: 0 },
+    center: { opacity: 1 },
+    exit: { opacity: 0 }
   };
 
   const modalVariants = {
@@ -1353,19 +1343,29 @@ const GHJPresentation: React.FC = () => {
             
             {/* スライドコンテンツ */}
             <div className="flex-1 p-6 overflow-y-auto">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={currentSlide}
-                  variants={slideVariants}
-                  initial="enter"
-                  animate="center"
-                  exit="exit"
-                  transition={{ duration: 0.3 }}
-                  className="h-full"
-                >
-                  {slides[currentSlide].content()}
-                </motion.div>
-              </AnimatePresence>
+              {/* デバッグ情報 */}
+              <div className="text-xs text-gray-400 mb-2">現在のスライド: {currentSlide + 1}</div>
+              
+              {/* スライド内容 - AnimatePresenceを一時的に無効化 */}
+              <div className="h-full">
+                {(() => {
+                  debugSlide(currentSlide);
+                  try {
+                    return slides[currentSlide].content();
+                  } catch (error) {
+                    console.error(`スライド ${currentSlide + 1} でエラーが発生しました:`, error);
+                    return (
+                      <div className="p-4 bg-red-100 rounded-lg">
+                        <h3 className="text-red-600 font-bold">エラーが発生しました</h3>
+                        <p>このスライドの表示中に問題が発生しました。</p>
+                        <pre className="mt-2 p-2 bg-white rounded text-xs overflow-auto">
+                          {error instanceof Error ? error.message : "Unknown error"}
+                        </pre>
+                      </div>
+                    );
+                  }
+                })()}
+              </div>
             </div>
             
             {/* スライドナビゲーション */}
