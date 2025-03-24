@@ -798,4 +798,4 @@ const GHJPresentation: React.FC = () => {
             >
               <h3 className="text-lg font-bold mb-2 text-[#feb47b]">第3章：天の岩戸開き</h3>
               <p className="text-sm">創造の礎たちが身を隠した「天の岩戸隠れ」から再び姿を現す「天の岩戸開き」へと至る統合の物語。全ての存在が自らも創造主であることに目覚めていく過程です。</p>
-            </motion.div>
+            </motion.div></div>
