@@ -1,17 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 
 // 型定義
-interface Question {
-  question: string;
-  isOpen: boolean;
-}
-
-interface WorksheetItem {
-  question: string;
-  answer: string;
-}
-
 interface GalaxyFamily {
   name: string;
   description: string;
@@ -34,16 +23,9 @@ interface AmatsuKanagiData {
   philosophy: string;
 }
 
-interface SlideProps {
-  toggleWorksheetMode: () => void;
-  showGalaxyFamilyDetail: (family: GalaxyFamily) => void;
-  toggleAmatsuKanagiDetail: () => void;
-}
-
-interface Slide {
-  title: string;
-  subtitle: string;
-  content: (props: SlideProps) => React.ReactNode;
+interface WorksheetItem {
+  question: string;
+  answer: string;
 }
 
 // 銀河ファミリーデータ
@@ -160,764 +142,6 @@ const worksheetData = [
   }
 ];
 
-// スライド定義 - コンポーネントの外部で定義
-const createSlides = (props: SlideProps): Slide[] => [
-  // スライド1: タイトル
-  {
-    title: "グレイトヒーローズジャーニー",
-    subtitle: "魂の解放を促すワークショップ",
-    content: () => (
-      <div className="flex flex-col h-full items-center justify-center text-center">
-        <motion.h1 
-          className="text-5xl font-bold mb-4 text-[#ff7e5f]"
-          initial={{ opacity: 0, y: -30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-        >
-          グレイトヒーローズジャーニー
-        </motion.h1>
-        <motion.h2 
-          className="text-3xl mb-8 text-[#feb47b]"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-        >
-          魂の解放を促すワークショップ
-        </motion.h2>
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1, delay: 0.6 }}
-          className="mb-10"
-        >
-          <div className="w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-[#ff7e5f] to-[#feb47b] shadow-lg mb-4"></div>
-          <p className="text-xl">2025年3月30日（日）in世田谷</p>
-        </motion.div>
-        <motion.p 
-          className="text-lg max-w-2xl"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 1 }}
-        >
-          宇宙の視点から自分の光を見つけていく、参加型ワークショップ＆お話会
-        </motion.p>
-      </div>
-    )
-  },
-  
-  // スライド2: GHJとは？
-  {
-    title: "GHJとは？",
-    subtitle: "魂の解放を促す上映プロジェクト",
-    content: () => (
-      <div className="flex flex-col h-full overflow-y-auto">
-        <h2 className="text-3xl font-bold mb-6 text-[#ff7e5f]">グレイトヒーローズジャーニーとは？</h2>
-        <motion.div 
-          className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow mb-6"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-        >
-          <p className="mb-4">グレイトヒーローズジャーニーは、2024年に発足した「魂の解放」を促す上映プロジェクトです。</p>
-          <p className="mb-4">音楽と映像、そして生のナレーションを通し、観る人の魂に眠る記憶を起こし、使命を立ち上がらせています。</p>
-          <p>超太古から伝わる根源のメッセージと、長い年月をかけて宇宙創造を営み地球のアセンションを見守る銀河の仲間たちーーシリウス、プレアデス、アンドロメダなどの叡智ーのガイドたちによって構成されています。</p>
-        </motion.div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          <motion.div 
-            className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.4 }}
-            whileHover={{ scale: 1.02 }}
-          >
-            <h3 className="text-lg font-bold mb-2 text-[#feb47b]">音楽</h3>
-            <p className="text-sm">宇宙の星々からメッセージやエネルギーを受け取り、魂に直接語りかける癒しの音楽。</p>
-          </motion.div>
-          
-          <motion.div 
-            className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            whileHover={{ scale: 1.02 }}
-          >
-            <h3 className="text-lg font-bold mb-2 text-[#feb47b]">映像</h3>
-            <p className="text-sm">壮大な宇宙の物語を視覚的に表現し、直感に訴える美しい映像表現。</p>
-          </motion.div>
-          
-          <motion.div 
-            className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow"
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.6 }}
-            whileHover={{ scale: 1.02 }}
-          >
-            <h3 className="text-lg font-bold mb-2 text-[#feb47b]">ナレーション</h3>
-            <p className="text-sm">古神道の叡智と宇宙のメッセージを伝える、心に響く生のナレーション。</p>
-          </motion.div>
-        </div>
-        
-        <motion.div 
-          className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.7 }}
-        >
-          <h3 className="text-xl font-bold mb-3 text-[#feb47b]">GHJプロジェクトの目的</h3>
-          <p className="mb-4">個々のヒーローズジャーニーの実現は、また大いなる意志のヒーローズジャーニーの実現であり、全ては一つであり愛であることを関わる全ての方々と表現し、実現させるというのがこのプロジェクトの目的です。</p>
-          <div className="p-3 bg-[#fff9f5] rounded-lg">
-            <p className="text-center font-bold italic">Only Love Is REAL — 全ては一つであり愛である</p>
-          </div>
-        </motion.div>
-      </div>
-    )
-  },
-  
-  // スライド3: 今日のワークショップについて
-  {
-    title: "今日のワークショップ",
-    subtitle: "『光の柱を立てる』",
-    content: () => (
-      <div className="flex flex-col h-full overflow-y-auto">
-        <h2 className="text-3xl font-bold mb-6 text-[#ff7e5f]">今日のワークショップ</h2>
-        <motion.div 
-          className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow mb-6"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-        >
-          <h3 className="text-xl font-bold mb-3 text-[#feb47b]">テーマ：『光の柱を立てる』</h3>
-          <p className="mb-4">天と地が繋がることは統合であり、神と人が繋がることもまた統合です。それはまさに己自身が創造主であると目覚めることでもあり、そこには天と地の間に光の柱が立つと言えます。</p>
-          <p>魂の解放とは、地上で『有限』だと思い込んでいた人類が天と繋がることで『無限』の可能性があることに目醒める、ということ。</p>
-        </motion.div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-          <motion.div 
-            className="bg-white p-5 rounded-lg shadow-md hover:shadow-lg transition-shadow"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.4 }}
-          >
-            <h3 className="text-lg font-bold mb-2 text-[#feb47b]">体験できること</h3>
-            <ul className="space-y-2">
-              <li className="flex items-start">
-                <span className="text-[#ff7e5f] mr-2">•</span>
-                <span>上映会のシナリオ解説</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-[#ff7e5f] mr-2">•</span>
-                <span>銀河ファミリーとしてのルーツを探るマッピング</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-[#ff7e5f] mr-2">•</span>
-                <span>古神道秘儀【天津金木】を使ったリーディング</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-[#ff7e5f] mr-2">•</span>
-                <span>『光の柱を立てる』ことをテーマにした誘導瞑想</span>
-              </li>
-            </ul>
-          </motion.div>
-          
-          <motion.div 
-            className="bg-white p-5 rounded-lg shadow-md hover:shadow-lg transition-shadow"
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.5 }}
-          >
-            <h3 className="text-lg font-bold mb-2 text-[#feb47b]">キーワード</h3>
-            <div className="flex flex-wrap gap-2">
-              <span className="px-3 py-1 bg-[#ffbe76]/30 rounded-full text-sm">愛とは？</span>
-              <span className="px-3 py-1 bg-[#ffbe76]/30 rounded-full text-sm">銀河ファミリー</span>
-              <span className="px-3 py-1 bg-[#ffbe76]/30 rounded-full text-sm">無から有</span>
-              <span className="px-3 py-1 bg-[#ffbe76]/30 rounded-full text-sm">ヒーローズとは</span>
-              <span className="px-3 py-1 bg-[#ffbe76]/30 rounded-full text-sm">創造のエネルギー</span>
-              <span className="px-3 py-1 bg-[#ffbe76]/30 rounded-full text-sm">天岩戸開き</span>
-              <span className="px-3 py-1 bg-[#ffbe76]/30 rounded-full text-sm">自分のルーツ</span>
-              <span className="px-3 py-1 bg-[#ffbe76]/30 rounded-full text-sm">魂の歓び</span>
-              <span className="px-3 py-1 bg-[#ffbe76]/30 rounded-full text-sm">統合</span>
-            </div>
-          </motion.div>
-        </div>
-        
-        <motion.div 
-          className="bg-[#fff9f5] p-5 rounded-lg shadow-md"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
-        >
-          <h3 className="text-lg font-bold mb-2 text-[#ff7e5f]">今日の流れ</h3>
-          <div className="space-y-2">
-            <div className="flex items-center">
-              <div className="w-8 h-8 rounded-full bg-[#feb47b] flex items-center justify-center text-white font-bold mr-3">1</div>
-              <span>GHJについての説明・上映会の内容について</span>
-            </div>
-            <div className="flex items-center">
-              <div className="w-8 h-8 rounded-full bg-[#feb47b] flex items-center justify-center text-white font-bold mr-3">2</div>
-              <span>銀河ファミリーマッピングワーク</span>
-            </div>
-            <div className="flex items-center">
-              <div className="w-8 h-8 rounded-full bg-[#feb47b] flex items-center justify-center text-white font-bold mr-3">3</div>
-              <span>天津金木リーディング</span>
-            </div>
-            <div className="flex items-center">
-              <div className="w-8 h-8 rounded-full bg-[#feb47b] flex items-center justify-center text-white font-bold mr-3">4</div>
-              <span>在り方を見つめる統合ワーク</span>
-            </div>
-            <div className="flex items-center">
-              <div className="w-8 h-8 rounded-full bg-[#feb47b] flex items-center justify-center text-white font-bold mr-3">5</div>
-              <span>『光の柱を立てる』誘導瞑想</span>
-            </div>
-          </div>
-        </motion.div>
-      </div>
-    )
-  },
-  
-  // スライド4: シナリオ解説
-  {
-    title: "シナリオ解説",
-    subtitle: "GHJ上映会の内容",
-    content: () => (
-      <div className="flex flex-col h-full overflow-y-auto">
-        <h2 className="text-3xl font-bold mb-6 text-[#ff7e5f]">シナリオ解説</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          <motion.div 
-            className="md:col-span-3 bg-white p-5 rounded-lg shadow-md hover:shadow-lg transition-shadow"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-          >
-            <h3 className="text-xl font-bold mb-3 text-[#feb47b]">GHJ上映会の3つの章</h3>
-            <p className="mb-4">グレイトヒーローズジャーニーの上映会では、宇宙創造の物語から銀河の歴史、そして天の岩戸開きまでの壮大なストーリーを体験します。</p>
-          </motion.div>
-          
-          <motion.div 
-            className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            whileHover={{ scale: 1.02 }}
-          >
-            <h3 className="text-lg font-bold mb-2 text-[#feb47b]">第1章：アメツチワカレ</h3>
-            <p className="text-sm mb-2">無から有への創造の始まり</p>
-            <ul className="text-xs space-y-1 pl-4 list-disc">
-              <li>無の世界と意志の発動</li>
-              <li>火と水の創造</li>
-              <li>高天原の形成</li>
-              <li>宇宙創造の始まり</li>
-              <li>天の岩戸隠れ</li>
-            </ul>
-          </motion.div>
-          
-          <motion.div 
-            className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            whileHover={{ scale: 1.02 }}
-          >
-            <h3 className="text-lg font-bold mb-2 text-[#feb47b]">第2章：銀河の歴史</h3>
-            <p className="text-sm mb-2">銀河ファミリーの旅</p>
-            <ul className="text-xs space-y-1 pl-4 list-disc">
-              <li>創造の礎と黄金の泉</li>
-              <li>シリウス・プレアデス・オリオン</li>
-              <li>アンドロメダ・リラ・ゼータレティクル</li>
-              <li>地球人類創生プロジェクト</li>
-            </ul>
-          </motion.div>
-          
-          <motion.div 
-            className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            whileHover={{ scale: 1.02 }}
-          >
-            <h3 className="text-lg font-bold mb-2 text-[#feb47b]">第3章：天の岩戸開き</h3>
-            <p className="text-sm mb-2">統合への道</p>
-            <ul className="text-xs space-y-1 pl-4 list-disc">
-              <li>創造の礎の帰還</li>
-              <li>火と水の統合</li>
-              <li>神と人の統合</li>
-              <li>全宇宙の統合</li>
-              <li>Only Love Is REAL</li>
-            </ul>
-          </motion.div>
-        </div>
-        
-        <motion.div 
-          className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
-        >
-          <h3 className="text-xl font-bold mb-3 text-[#feb47b]">今日のワークショップでのシナリオ活用</h3>
-          <p className="mb-4">上映会のシナリオを元に、今日のワークショップでは自分自身を振り返ります。これまでの幸せな時や辛い時、山あり谷あり乗り越えてきた人生を振り返り、棚卸ししてみましょう！</p>
-          <p>そして、これからどんな生き方をしていくのかを見つめ直してみましょう。</p>
-        </motion.div>
-      </div>
-    )
-  },
-  
-  // スライド5: よくある質問
-  {
-    title: "よくある質問",
-    subtitle: "GHJについてのQ&A",
-    content: () => (
-      <div className="flex flex-col h-full overflow-y-auto">
-        <h2 className="text-3xl font-bold mb-6 text-[#ff7e5f]">よくある質問</h2>
-        <div className="space-y-4">
-          {[
-            {
-              question: "GHJの上映会はどのように行われますか？",
-              answer: "GHJの上映会では、音楽と映像、そして生のナレーションを組み合わせ、参加者の魂に眠る記憶を呼び覚ます体験を提供します。通常の映画鑑賞とは異なり、より体験型・参加型のイベントとなっています。"
-            },
-            {
-              question: "銀河ファミリーとは具体的に何ですか？",
-              answer: "銀河ファミリーとは、私たち地球人を含む宇宙の様々な存在たちのことです。シリウス、プレアデス、オリオンなど、それぞれの種族はそれぞれの特性を持っており、私たちのDNAには様々な星の特性が組み込まれています。"
-            },
-            {
-              question: "このワークショップでは何が体験できますか？",
-              answer: "このワークショップでは、上映会のシナリオ解説、銀河ファミリーマッピング、天津金木リーディング、統合ワーク、そして光の柱を立てる誘導瞑想などを体験できます。音楽とともに内側から宇宙を旅する時間を味わえます。"
-            },
-            {
-              question: "初めてでも参加できますか？",
-              answer: "はい、初めての方も大歓迎です！「グレイトヒーローズジャーニーってなあに？」という説明から始まり、参加型のワークショップを通して体験していただけます。上映会を観ていない方、宇宙や古神道に詳しくない方も安心してご参加いただけます。"
-            },
-            {
-              question: "天津金木とは何ですか？",
-              answer: "天津金木（あまつかなぎ）は、古神道に伝わる秘儀の一つで「持ち歩く神社」とも言われる神具です。宇宙の四大源力（天・火・水・地）に基づいて、現在のあなたの在り方が宇宙創造の法則に則っているかを示します。"
-            }
-          ].map((item, index) => (
-            <div 
-              key={index}
-              className="bg-white p-5 rounded-lg shadow-md hover:shadow-lg transition-shadow cursor-pointer"
-            >
-              <div className="flex justify-between items-center mb-2">
-                <h3 className="text-lg font-bold text-[#4a3933]">{item.question}</h3>
-              </div>
-              <div className="pt-2 border-t border-gray-200">
-                <p>{item.answer}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    )
-  },
-  
-  // スライド6: 銀河ファミリー
-  {
-    title: "銀河ファミリー",
-    subtitle: "宇宙の仲間たちの特性",
-    content: ({ toggleWorksheetMode, showGalaxyFamilyDetail }) => (
-      <div className="flex flex-col h-full overflow-y-auto">
-        <h2 className="text-3xl font-bold mb-6 text-[#ff7e5f]">銀河ファミリー</h2>
-        <motion.p 
-          className="mb-6"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-        >
-          銀河ファミリーとは、私たち地球人を含む宇宙の様々な存在たちのことです。それぞれの種族はそれぞれの特性を持っており、私たちのDNAには様々な星の特性が組み込まれています。ワークショップでは、自分がどの種族の特性を持っているかを探るマッピングを行います。
-        </motion.p>
-        
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          {galaxyFamiliesData.map((family, index) => (
-            <motion.div 
-              key={family.name}
-              className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow cursor-pointer"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 + index * 0.1 }}
-              onClick={() => showGalaxyFamilyDetail(family)}
-              whileHover={{ scale: 1.02 }}
-            >
-              <h3 className="text-lg font-bold mb-2 text-[#feb47b]">{family.name}</h3>
-              <p className="text-sm mb-2">{family.description.slice(0, 100)}...</p>
-              <div className="flex flex-wrap gap-1 mt-2">
-                {family.traits.slice(0, 3).map(trait => (
-                  <span key={trait} className="px-2 py-1 text-xs bg-[#ffbe76]/30 rounded-full">
-                    {trait}
-                  </span>
-                ))}
-                {family.traits.length > 3 && (
-                  <span className="px-2 py-1 text-xs bg-[#ffbe76]/30 rounded-full">
-                    +{family.traits.length - 3}
-                  </span>
-                )}
-              </div>
-              <div className="mt-3 text-right">
-                <span className="text-xs text-[#ff7e5f]">詳細を見る →</span>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-        
-        <motion.div 
-          className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
-        >
-          <h3 className="text-xl font-bold mb-3 text-[#feb47b]">ワークショップでのマッピングについて</h3>
-          <p className="mb-4">ワークショップでは、それぞれの銀河ファミリーの特性を詳しく解説し、自分がどの種族の特性を持っているかを探っていきます。</p>
-          <p className="mb-4">人はそれぞれ複数の種族の特性を持っており、その組み合わせがユニークな個性となっています。自分の中のさまざまな特性を知ることで、自分の強みや課題に気づき、より調和した生き方を見つけることができます。</p>
-          <p>ワークショップでは、直感的なエクササイズやチェックリストを使って、自分の中の銀河種族の特性を探ります。興味が湧いた方は、ワークシートを開いて事前に考えてみてください。</p>
-        </motion.div>
-        
-        <motion.div 
-          className="mt-6 flex justify-center"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.7 }}
-        >
-          <button 
-            onClick={toggleWorksheetMode}
-            className="px-6 py-3 bg-[#feb47b] text-white rounded-full hover:bg-[#ff7e5f] transition-colors shadow-md"
-          >
-            ワークシートを開く
-          </button>
-        </motion.div>
-      </div>
-    )
-  },
-  
-  // スライド7: 天津金木リーディング
-  {
-    title: "天津金木リーディング",
-    subtitle: "古神道に伝わる秘儀",
-    content: ({ toggleWorksheetMode, toggleAmatsuKanagiDetail }) => (
-      <div className="flex flex-col h-full overflow-y-auto">
-        <h2 className="text-3xl font-bold mb-6 text-[#ff7e5f]">天津金木リーディング</h2>
-        <motion.div 
-          className="bg-white p-6 rounded-lg shadow-md mb-6 hover:shadow-lg transition-shadow"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-        >
-          <h3 className="text-xl font-bold mb-3 text-[#feb47b]">天津金木（あまつかなぎ）とは</h3>
-          <p className="mb-2">{amatsuKanagiData.description}</p>
-          <p className="mb-2">古神道の思想にある宇宙の四大源力になぞらえて、現在の在り方が宇宙創造の法則に則っているのかを指し示します。</p>
-          <button 
-            onClick={toggleAmatsuKanagiDetail}
-            className="mt-2 px-4 py-2 bg-[#ffbe76]/30 hover:bg-[#ffbe76]/50 rounded-lg transition-colors text-sm"
-          >
-            詳細を見る
-          </button>
-        </motion.div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-          {amatsuKanagiData.elements.map((element, index) => (
-            <motion.div 
-              key={element.name}
-              className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow"
-              initial={{ opacity: 0, x: index % 2 === 0 ? -20 : 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.3 + index * 0.1 }}
-              whileHover={{ scale: 1.02 }}
-            >
-              <h3 className="text-lg font-bold mb-2 text-[#feb47b]">{element.name}</h3>
-              <p className="text-sm mb-3">{element.description}</p>
-              <div className="grid grid-cols-2 gap-2">
-                <div className="bg-green-100 p-2 rounded-md">
-                  <h4 className="text-xs font-bold text-green-700 mb-1">調和状態</h4>
-                  <p className="text-xs">{element.positive}</p>
-                </div>
-                <div className="bg-red-100 p-2 rounded-md">
-                  <h4 className="text-xs font-bold text-red-700 mb-1">不調和状態</h4>
-                  <p className="text-xs">{element.negative}</p>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-        
-        <motion.div 
-          className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.7 }}
-        >
-          <h3 className="text-xl font-bold mb-3 text-[#feb47b]">ワークショップでのリーディングについて</h3>
-          <p className="mb-4">ワークショップでは、天津金木を使用した現在の自分の状態を見つめるリーディングを行います。このリーディングにより、現在のあなたが宇宙の法則にどう調和しているかを知ることができます。</p>
-          <p>自分を見つめることで課題を浮き彫りにし、理想的な生き方を考えるきっかけとなります。天と地をつなぐ「光の柱」を立てるためには、まず現在の自分の状態を知ることが大切です。</p>
-        </motion.div>
-        
-        <motion.div 
-          className="mt-6 flex justify-center"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.8 }}
-        >
-          <button 
-            onClick={toggleWorksheetMode}
-            className="px-6 py-3 bg-[#feb47b] text-white rounded-full hover:bg-[#ff7e5f] transition-colors shadow-md"
-          >
-            ワークシートを開く
-          </button>
-        </motion.div>
-      </div>
-    )
-  },
-  
-  // スライド8: ワークショッププログラム
-  {
-    title: "ワークショッププログラム",
-    subtitle: "魂の解放を目指すカリキュラム",
-    content: ({ toggleWorksheetMode }) => (
-      <div className="flex flex-col h-full overflow-y-auto">
-        <h2 className="text-3xl font-bold mb-6 text-[#ff7e5f]">本日のワークショッププログラム</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="bg-white p-5 rounded-lg shadow-md hover:shadow-lg transition-shadow"
-          >
-            <h3 className="text-xl font-bold mb-3 text-[#feb47b]">1. GHJについて</h3>
-            <p className="mb-2">・GHJとは何か、始めた経緯の説明</p>
-            <p className="mb-2">・上映会の内容について説明・質疑応答</p>
-            <p>・これからのGHJについて・コンセプト・目的</p>
-          </motion.div>
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="bg-white p-5 rounded-lg shadow-md hover:shadow-lg transition-shadow"
-          >
-            <h3 className="text-xl font-bold mb-3 text-[#feb47b]">2. 銀河ファミリーマッピングワーク</h3>
-            <p className="mb-2">・銀河ファミリーマッピングの説明</p>
-            <p className="mb-2">・参加者それぞれがどの属性にあるのかを考える</p>
-            <p>・それぞれの特性を見て自分にどんな癖がありどんなふうに変えていきたいか考える</p>
-          </motion.div>
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="bg-white p-5 rounded-lg shadow-md hover:shadow-lg transition-shadow"
-          >
-            <h3 className="text-xl font-bold mb-3 text-[#feb47b]">3. 自分を見つめる天津金木リーディング</h3>
-            <p className="mb-2">・出てくる象意によって現在の意識の持ち方を見つめる</p>
-            <p className="mb-2">・自分を見つめる事で課題を浮き彫りにしていく</p>
-            <p>・理想的な生き方とは？を考える</p>
-          </motion.div>
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="bg-white p-5 rounded-lg shadow-md hover:shadow-lg transition-shadow"
-          >
-            <h3 className="text-xl font-bold mb-3 text-[#feb47b]">4. 在り方を見つめる統合ワーク</h3>
-            <p className="mb-2">・統合とは？についての古神道的考察</p>
-            <p className="mb-2">・統合を考えるワークシート</p>
-            <p>・自分自身の在り方を見つめるワーク</p>
-          </motion.div>
-        </div>
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          className="bg-white p-5 rounded-lg shadow-md hover:shadow-lg transition-shadow"
-        >
-          <h3 className="text-xl font-bold mb-3 text-[#feb47b]">5. 光の柱を立てる誘導瞑想</h3>
-          <p className="mb-2">・現地＆Zoom参加者同時に行う瞑想</p>
-          <p className="mb-2">・音楽によるヒーリング</p>
-          <p className="mb-2">・大いなる愛と繋がり己を思い出す</p>
-          <p>・大いなる意志と己の魂が一つとなりどう生きるかを考える</p>
-        </motion.div>
-        <motion.div 
-          className="mt-6 flex justify-center"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.7 }}
-        >
-          <button 
-            onClick={toggleWorksheetMode}
-            className="px-6 py-3 bg-[#feb47b] text-white rounded-full hover:bg-[#ff7e5f] transition-colors shadow-md"
-          >
-            ワークシートを開く
-          </button>
-        </motion.div>
-      </div>
-    )
-  },
-  
-  // スライド9: これからのGHJ
-  {
-    title: "これからのGHJ",
-    subtitle: "ビジョンと展望",
-    content: () => (
-      <div className="flex flex-col h-full">
-        <h2 className="text-3xl font-bold mb-6 text-[#ff7e5f]">これからのGHJ</h2>
-        <div className="flex flex-col md:flex-row gap-6 flex-1">
-          <motion.div 
-            className="flex-1 bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-          >
-            <h3 className="text-xl font-bold mb-3 text-[#feb47b]">私たちのビジョン</h3>
-            <p className="mb-4">個々のヒーローズジャーニーの実現は、また大いなる意志のヒーローズジャーニーの実現であり、全ては一つであり愛であることを関わる全ての方々と表現し、実現させることがこのプロジェクトの目的です。</p>
-            <p className="mb-4">誰もが人生そのものと言える輝かしいヒーローズジャーニーを歩んでいます。どんな人にも約束されている輝かしいヒーローズジャーニーを実現することが出来るのです。</p>
-            <p>私たちはそのことを大切な方々に伝え、みんなと輝かしい人生を共有することで輝かしい世界を創造できると考えています。</p>
-          </motion.div>
-          <motion.div 
-            className="flex-1 bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-          >
-            <h3 className="text-xl font-bold mb-3 text-[#feb47b]">今後の展開</h3>
-            <ul className="list-disc pl-5 space-y-2">
-              <li className="hover:text-[#ff7e5f] transition-colors">定期的な上映会の開催</li>
-              <li className="hover:text-[#ff7e5f] transition-colors">ワークショップの全国展開</li>
-              <li className="hover:text-[#ff7e5f] transition-colors">オンラインコミュニティの形成</li>
-              <li className="hover:text-[#ff7e5f] transition-colors">オラクルカードの作成</li>
-              <li className="hover:text-[#ff7e5f] transition-colors">銀河ファミリーマッピングの深化</li>
-              <li className="hover:text-[#ff7e5f] transition-colors">ヒーリング音楽の制作・配信</li>
-              <li className="hover:text-[#ff7e5f] transition-colors">個人の魂の開放をサポートする活動</li>
-            </ul>
-          </motion.div>
-        </div>
-        <motion.div 
-          className="mt-6 p-4 rounded-lg text-center bg-[#ffbe76]/40 hover:bg-[#ffbe76]/60 transition-all"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.6 }}
-        >
-          <p className="font-bold">Only Love Is REAL ―― 全ては一つであり愛である</p>
-        </motion.div>
-      </div>
-    )
-  },
-  
-  // スライド10: お問い合わせ
-  {
-    title: "お問い合わせ",
-    subtitle: "ワークショップ参加申し込み",
-    content: () => (
-      <div className="flex flex-col h-full overflow-y-auto">
-        <h2 className="text-3xl font-bold mb-6 text-[#ff7e5f]">お問い合わせ</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <motion.div 
-            className="bg-white p-6 rounded-lg shadow-md"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.2 }}
-          >
-            <h3 className="text-xl font-bold mb-4 text-[#feb47b]">ワークショップ詳細</h3>
-            <div className="space-y-4">
-              <div>
-                <h4 className="font-bold text-[#4a3933] mb-1">日時</h4>
-                <p>2025年3月30日（日）13時〜16時</p>
-                <p className="text-sm text-gray-600">15分前（12:45）からお入りいただけます</p>
-              </div>
-              <div>
-                <h4 className="font-bold text-[#4a3933] mb-1">会場</h4>
-                <p>台所たまねぎ（2階スペース）</p>
-                <p className="text-sm text-gray-600">東京都世田谷区奥沢３丁目３１−１０</p>
-                <p className="text-sm text-gray-600">東急目黒線「奥沢駅」 徒歩3分</p>
-              </div>
-              <div>
-                <h4 className="font-bold text-[#4a3933] mb-1">参加費</h4>
-                <p>現地参加（1ドリンク込み）：3,000円</p>
-                <p>オンラインZoom参加：1,000円</p>
-              </div>
-              <div>
-                <h4 className="font-bold text-[#4a3933] mb-1">お申し込み方法</h4>
-                <p>下記フォームまたはメールにてお申し込みください</p>
-                <p className="text-sm text-gray-600">定員：会場10名／オンライン20名</p>
-              </div>
-            </div>
-          </motion.div>
-          
-          <motion.div 
-            className="bg-white p-6 rounded-lg shadow-md"
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.3 }}
-          >
-            <h3 className="text-xl font-bold mb-4 text-[#feb47b]">お問い合わせフォーム</h3>
-            <form className="space-y-4">
-              <div>
-                <label htmlFor="name" className="block text-sm font-medium mb-1">お名前 <span className="text-red-500">*</span></label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#ff7e5f]"
-                  required
-                />
-              </div>
-              
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium mb-1">メールアドレス <span className="text-red-500">*</span></label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#ff7e5f]"
-                  required
-                />
-              </div>
-              
-              <div>
-                <label htmlFor="participationType" className="block text-sm font-medium mb-1">参加タイプ</label>
-                <select
-                  id="participationType"
-                  name="participationType"
-                  className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#ff7e5f]"
-                >
-                  <option value="venue">会場参加</option>
-                  <option value="online">オンライン参加</option>
-                  <option value="inquiry">お問い合わせのみ</option>
-                </select>
-              </div>
-              
-              <div>
-                <label htmlFor="message" className="block text-sm font-medium mb-1">メッセージ</label>
-                <textarea
-                  id="message"
-                  name="message"
-                  rows={4}
-                  className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#ff7e5f]"
-                  placeholder="ご質問や参加希望の日時などをご記入ください"
-                ></textarea>
-              </div>
-              
-              <button
-                type="submit"
-                className="w-full py-2 px-4 bg-[#ff7e5f] text-white rounded-md hover:bg-[#ff7e5f]/80 transition-colors"
-              >
-                送信する
-              </button>
-            </form>
-          </motion.div>
-        </div>
-        
-        <motion.div 
-          className="mt-6 p-5 bg-[#fff9f5] rounded-lg shadow-md text-center"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-        >
-          <h3 className="text-lg font-bold mb-2 text-[#ff7e5f]">お問い合わせ先</h3>
-          <p className="mb-1">グレイトヒーローズジャーニー事務局</p>
-          <p>info@greatherosjourney.jp</p>
-        </motion.div>
-      </div>
-    )
-  }
-];
-
-// デバッグ用の関数
-const debugSlide = (index: number) => {
-  console.log(`スライド ${index + 1} をレンダリングしています`);
-};
-
 // GHJPresentationコンポーネント
 const GHJPresentation: React.FC = () => {
   // State管理
@@ -930,20 +154,6 @@ const GHJPresentation: React.FC = () => {
   const [userWorksheet, setUserWorksheet] = useState<WorksheetItem[][]>(
     worksheetData.map(section => section.items.map(item => ({ ...item })))
   );
-  const [questions, setQuestions] = useState<Question[]>([
-    { question: "GHJの上映会はどのように行われますか？", isOpen: false },
-    { question: "銀河ファミリーとは具体的に何ですか？", isOpen: false },
-    { question: "このワークショップでは何が体験できますか？", isOpen: false },
-    { question: "初めてでも参加できますか？", isOpen: false },
-    { question: "天津金木とは何ですか？", isOpen: false }
-  ]);
-  
-  // スライドデータの生成
-  const slides = createSlides({
-    toggleWorksheetMode,
-    showGalaxyFamilyDetail,
-    toggleAmatsuKanagiDetail,
-  });
 
   // イベントハンドラ
   const handleWorksheetChange = useCallback((sectionIndex: number, itemIndex: number, value: string) => {
@@ -977,13 +187,13 @@ const GHJPresentation: React.FC = () => {
     if (index >= 0 && index < slides.length) {
       setCurrentSlide(index);
     }
-  }, [slides.length]);
+  }, []);
 
   const nextSlide = useCallback(() => {
     if (currentSlide < slides.length - 1) {
       setCurrentSlide(currentSlide + 1);
     }
-  }, [currentSlide, slides.length]);
+  }, [currentSlide]);
 
   const prevSlide = useCallback(() => {
     if (currentSlide > 0) {
@@ -1007,34 +217,570 @@ const GHJPresentation: React.FC = () => {
     };
   }, [nextSlide, prevSlide]);
 
-  // トランジションエフェクト
-  const slideVariants = {
-    enter: { opacity: 0 },
-    center: { opacity: 1 },
-    exit: { opacity: 0 }
-  };
-
-  const modalVariants = {
-    hidden: { opacity: 0, scale: 0.8 },
-    visible: { opacity: 1, scale: 1, transition: { duration: 0.3 } },
-    exit: { opacity: 0, scale: 0.8, transition: { duration: 0.2 } }
-  };
+  // スライド定義
+  const slides = [
+    // スライド1: タイトル
+    {
+      title: "グレイトヒーローズジャーニー",
+      subtitle: "魂の解放を促すワークショップ",
+      content: (
+        <div className="flex flex-col h-full items-center justify-center text-center">
+          <h1 className="text-5xl font-bold mb-4 text-[#ff7e5f]">
+            グレイトヒーローズジャーニー
+          </h1>
+          <h2 className="text-3xl mb-8 text-[#feb47b]">
+            魂の解放を促すワークショップ
+          </h2>
+          <div className="mb-10">
+            <div className="w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-[#ff7e5f] to-[#feb47b] shadow-lg mb-4"></div>
+            <p className="text-xl">2025年3月30日（日）in世田谷</p>
+          </div>
+          <p className="text-lg max-w-2xl">
+            宇宙の視点から自分の光を見つけていく、参加型ワークショップ＆お話会
+          </p>
+        </div>
+      )
+    },
+    
+    // スライド2: GHJとは？
+    {
+      title: "GHJとは？",
+      subtitle: "魂の解放を促す上映プロジェクト",
+      content: (
+        <div className="flex flex-col h-full overflow-y-auto">
+          <h2 className="text-3xl font-bold mb-6 text-[#ff7e5f]">グレイトヒーローズジャーニーとは？</h2>
+          <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow mb-6">
+            <p className="mb-4">グレイトヒーローズジャーニーは、2024年に発足した「魂の解放」を促す上映プロジェクトです。</p>
+            <p className="mb-4">音楽と映像、そして生のナレーションを通し、観る人の魂に眠る記憶を起こし、使命を立ち上がらせています。</p>
+            <p>超太古から伝わる根源のメッセージと、長い年月をかけて宇宙創造を営み地球のアセンションを見守る銀河の仲間たちーーシリウス、プレアデス、アンドロメダなどの叡智ーのガイドたちによって構成されています。</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+              <h3 className="text-lg font-bold mb-2 text-[#feb47b]">音楽</h3>
+              <p className="text-sm">宇宙の星々からメッセージやエネルギーを受け取り、魂に直接語りかける癒しの音楽。</p>
+            </div>
+            
+            <div className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+              <h3 className="text-lg font-bold mb-2 text-[#feb47b]">映像</h3>
+              <p className="text-sm">壮大な宇宙の物語を視覚的に表現し、直感に訴える美しい映像表現。</p>
+            </div>
+            
+            <div className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+              <h3 className="text-lg font-bold mb-2 text-[#feb47b]">ナレーション</h3>
+              <p className="text-sm">古神道の叡智と宇宙のメッセージを伝える、心に響く生のナレーション。</p>
+            </div>
+          </div>
+          
+          <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+            <h3 className="text-xl font-bold mb-3 text-[#feb47b]">GHJプロジェクトの目的</h3>
+            <p className="mb-4">個々のヒーローズジャーニーの実現は、また大いなる意志のヒーローズジャーニーの実現であり、全ては一つであり愛であることを関わる全ての方々と表現し、実現させるというのがこのプロジェクトの目的です。</p>
+            <div className="p-3 bg-[#fff9f5] rounded-lg">
+              <p className="text-center font-bold italic">Only Love Is REAL — 全ては一つであり愛である</p>
+            </div>
+          </div>
+        </div>
+      )
+    },
+    
+    // スライド3: 今日のワークショップについて
+    {
+      title: "今日のワークショップ",
+      subtitle: "『光の柱を立てる』",
+      content: (
+        <div className="flex flex-col h-full overflow-y-auto">
+          <h2 className="text-3xl font-bold mb-6 text-[#ff7e5f]">今日のワークショップ</h2>
+          <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow mb-6">
+            <h3 className="text-xl font-bold mb-3 text-[#feb47b]">テーマ：『光の柱を立てる』</h3>
+            <p className="mb-4">天と地が繋がることは統合であり、神と人が繋がることもまた統合です。それはまさに己自身が創造主であると目覚めることでもあり、そこには天と地の間に光の柱が立つと言えます。</p>
+            <p>魂の解放とは、地上で『有限』だと思い込んでいた人類が天と繋がることで『無限』の可能性があることに目醒める、ということ。</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div className="bg-white p-5 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+              <h3 className="text-lg font-bold mb-2 text-[#feb47b]">体験できること</h3>
+              <ul className="space-y-2">
+                <li className="flex items-start">
+                  <span className="text-[#ff7e5f] mr-2">•</span>
+                  <span>上映会のシナリオ解説</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-[#ff7e5f] mr-2">•</span>
+                  <span>銀河ファミリーとしてのルーツを探るマッピング</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-[#ff7e5f] mr-2">•</span>
+                  <span>古神道秘儀【天津金木】を使ったリーディング</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-[#ff7e5f] mr-2">•</span>
+                  <span>『光の柱を立てる』ことをテーマにした誘導瞑想</span>
+                </li>
+              </ul>
+            </div>
+            
+            <div className="bg-white p-5 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+              <h3 className="text-lg font-bold mb-2 text-[#feb47b]">キーワード</h3>
+              <div className="flex flex-wrap gap-2">
+                <span className="px-3 py-1 bg-[#ffbe76]/30 rounded-full text-sm">愛とは？</span>
+                <span className="px-3 py-1 bg-[#ffbe76]/30 rounded-full text-sm">銀河ファミリー</span>
+                <span className="px-3 py-1 bg-[#ffbe76]/30 rounded-full text-sm">無から有</span>
+                <span className="px-3 py-1 bg-[#ffbe76]/30 rounded-full text-sm">ヒーローズとは</span>
+                <span className="px-3 py-1 bg-[#ffbe76]/30 rounded-full text-sm">創造のエネルギー</span>
+                <span className="px-3 py-1 bg-[#ffbe76]/30 rounded-full text-sm">天岩戸開き</span>
+                <span className="px-3 py-1 bg-[#ffbe76]/30 rounded-full text-sm">自分のルーツ</span>
+                <span className="px-3 py-1 bg-[#ffbe76]/30 rounded-full text-sm">魂の歓び</span>
+                <span className="px-3 py-1 bg-[#ffbe76]/30 rounded-full text-sm">統合</span>
+              </div>
+            </div>
+          </div>
+          
+          <div className="bg-[#fff9f5] p-5 rounded-lg shadow-md">
+            <h3 className="text-lg font-bold mb-2 text-[#ff7e5f]">今日の流れ</h3>
+            <div className="space-y-2">
+              <div className="flex items-center">
+                <div className="w-8 h-8 rounded-full bg-[#feb47b] flex items-center justify-center text-white font-bold mr-3">1</div>
+                <span>GHJについての説明・上映会の内容について</span>
+              </div>
+              <div className="flex items-center">
+                <div className="w-8 h-8 rounded-full bg-[#feb47b] flex items-center justify-center text-white font-bold mr-3">2</div>
+                <span>銀河ファミリーマッピングワーク</span>
+              </div>
+              <div className="flex items-center">
+                <div className="w-8 h-8 rounded-full bg-[#feb47b] flex items-center justify-center text-white font-bold mr-3">3</div>
+                <span>天津金木リーディング</span>
+              </div>
+              <div className="flex items-center">
+                <div className="w-8 h-8 rounded-full bg-[#feb47b] flex items-center justify-center text-white font-bold mr-3">4</div>
+                <span>在り方を見つめる統合ワーク</span>
+              </div>
+              <div className="flex items-center">
+                <div className="w-8 h-8 rounded-full bg-[#feb47b] flex items-center justify-center text-white font-bold mr-3">5</div>
+                <span>『光の柱を立てる』誘導瞑想</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    },
+    
+    // スライド4: シナリオ解説
+    {
+      title: "シナリオ解説",
+      subtitle: "GHJ上映会の内容",
+      content: (
+        <div className="flex flex-col h-full overflow-y-auto">
+          <h2 className="text-3xl font-bold mb-6 text-[#ff7e5f]">シナリオ解説</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div className="md:col-span-3 bg-white p-5 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+              <h3 className="text-xl font-bold mb-3 text-[#feb47b]">GHJ上映会の3つの章</h3>
+              <p className="mb-4">グレイトヒーローズジャーニーの上映会では、宇宙創造の物語から銀河の歴史、そして天の岩戸開きまでの壮大なストーリーを体験します。</p>
+            </div>
+            
+            <div className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+              <h3 className="text-lg font-bold mb-2 text-[#feb47b]">第1章：アメツチワカレ</h3>
+              <p className="text-sm mb-2">無から有への創造の始まり</p>
+              <ul className="text-xs space-y-1 pl-4 list-disc">
+                <li>無の世界と意志の発動</li>
+                <li>火と水の創造</li>
+                <li>高天原の形成</li>
+                <li>宇宙創造の始まり</li>
+                <li>天の岩戸隠れ</li>
+              </ul>
+            </div>
+            
+            <div className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+              <h3 className="text-lg font-bold mb-2 text-[#feb47b]">第2章：銀河の歴史</h3>
+              <p className="text-sm mb-2">銀河ファミリーの旅</p>
+              <ul className="text-xs space-y-1 pl-4 list-disc">
+                <li>創造の礎と黄金の泉</li>
+                <li>シリウス・プレアデス・オリオン</li>
+                <li>アンドロメダ・リラ・ゼータレティクル</li>
+                <li>地球人類創生プロジェクト</li>
+              </ul>
+            </div>
+            
+            <div className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+              <h3 className="text-lg font-bold mb-2 text-[#feb47b]">第3章：天の岩戸開き</h3>
+              <p className="text-sm mb-2">統合への道</p>
+              <ul className="text-xs space-y-1 pl-4 list-disc">
+                <li>創造の礎の帰還</li>
+                <li>火と水の統合</li>
+                <li>神と人の統合</li>
+                <li>全宇宙の統合</li>
+                <li>Only Love Is REAL</li>
+              </ul>
+            </div>
+          </div>
+          
+          <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+            <h3 className="text-xl font-bold mb-3 text-[#feb47b]">今日のワークショップでのシナリオ活用</h3>
+            <p className="mb-4">上映会のシナリオを元に、今日のワークショップでは自分自身を振り返ります。これまでの幸せな時や辛い時、山あり谷あり乗り越えてきた人生を振り返り、棚卸ししてみましょう！</p>
+            <p>そして、これからどんな生き方をしていくのかを見つめ直してみましょう。</p>
+          </div>
+        </div>
+      )
+    },
+    
+    // スライド5: よくある質問
+    {
+      title: "よくある質問",
+      subtitle: "GHJについてのQ&A",
+      content: (
+        <div className="flex flex-col h-full overflow-y-auto">
+          <h2 className="text-3xl font-bold mb-6 text-[#ff7e5f]">よくある質問</h2>
+          <div className="space-y-4">
+            {[
+              {
+                question: "GHJの上映会はどのように行われますか？",
+                answer: "GHJの上映会では、音楽と映像、そして生のナレーションを組み合わせ、参加者の魂に眠る記憶を呼び覚ます体験を提供します。通常の映画鑑賞とは異なり、より体験型・参加型のイベントとなっています。"
+              },
+              {
+                question: "銀河ファミリーとは具体的に何ですか？",
+                answer: "銀河ファミリーとは、私たち地球人を含む宇宙の様々な存在たちのことです。シリウス、プレアデス、オリオンなど、それぞれの種族はそれぞれの特性を持っており、私たちのDNAには様々な星の特性が組み込まれています。"
+              },
+              {
+                question: "このワークショップでは何が体験できますか？",
+                answer: "このワークショップでは、上映会のシナリオ解説、銀河ファミリーマッピング、天津金木リーディング、統合ワーク、そして光の柱を立てる誘導瞑想などを体験できます。音楽とともに内側から宇宙を旅する時間を味わえます。"
+              },
+              {
+                question: "初めてでも参加できますか？",
+                answer: "はい、初めての方も大歓迎です！「グレイトヒーローズジャーニーってなあに？」という説明から始まり、参加型のワークショップを通して体験していただけます。上映会を観ていない方、宇宙や古神道に詳しくない方も安心してご参加いただけます。"
+              },
+              {
+                question: "天津金木とは何ですか？",
+                answer: "天津金木（あまつかなぎ）は、古神道に伝わる秘儀の一つで「持ち歩く神社」とも言われる神具です。宇宙の四大源力（天・火・水・地）に基づいて、現在のあなたの在り方が宇宙創造の法則に則っているかを示します。"
+              }
+            ].map((item, index) => (
+              <div 
+                key={index}
+                className="bg-white p-5 rounded-lg shadow-md hover:shadow-lg transition-shadow cursor-pointer"
+              >
+                <div className="flex justify-between items-center mb-2">
+                  <h3 className="text-lg font-bold text-[#4a3933]">{item.question}</h3>
+                </div>
+                <div className="pt-2 border-t border-gray-200">
+                  <p>{item.answer}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )
+    },
+    
+    // スライド6: 銀河ファミリー
+    {
+      title: "銀河ファミリー",
+      subtitle: "宇宙の仲間たちの特性",
+      content: (
+        <div className="flex flex-col h-full overflow-y-auto">
+          <h2 className="text-3xl font-bold mb-6 text-[#ff7e5f]">銀河ファミリー</h2>
+          <p className="mb-6">
+            銀河ファミリーとは、私たち地球人を含む宇宙の様々な存在たちのことです。それぞれの種族はそれぞれの特性を持っており、私たちのDNAには様々な星の特性が組み込まれています。ワークショップでは、自分がどの種族の特性を持っているかを探るマッピングを行います。
+          </p>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            {galaxyFamiliesData.map((family, index) => (
+              <div 
+                key={family.name}
+                className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow cursor-pointer"
+                onClick={() => showGalaxyFamilyDetail(family)}
+              >
+                <h3 className="text-lg font-bold mb-2 text-[#feb47b]">{family.name}</h3>
+                <p className="text-sm mb-2">{family.description.slice(0, 100)}...</p>
+                <div className="flex flex-wrap gap-1 mt-2">
+                  {family.traits.slice(0, 3).map(trait => (
+                    <span key={trait} className="px-2 py-1 text-xs bg-[#ffbe76]/30 rounded-full">
+                      {trait}
+                    </span>
+                  ))}
+                  {family.traits.length > 3 && (
+                    <span className="px-2 py-1 text-xs bg-[#ffbe76]/30 rounded-full">
+                      +{family.traits.length - 3}
+                    </span>
+                  )}
+                </div>
+                <div className="mt-3 text-right">
+                  <span className="text-xs text-[#ff7e5f]">詳細を見る →</span>
+                </div>
+              </div>
+            ))}
+          </div>
+          
+          <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+            <h3 className="text-xl font-bold mb-3 text-[#feb47b]">ワークショップでのマッピングについて</h3>
+            <p className="mb-4">ワークショップでは、それぞれの銀河ファミリーの特性を詳しく解説し、自分がどの種族の特性を持っているかを探っていきます。</p>
+            <p className="mb-4">人はそれぞれ複数の種族の特性を持っており、その組み合わせがユニークな個性となっています。自分の中のさまざまな特性を知ることで、自分の強みや課題に気づき、より調和した生き方を見つけることができます。</p>
+            <p>ワークショップでは、直感的なエクササイズやチェックリストを使って、自分の中の銀河種族の特性を探ります。興味が湧いた方は、ワークシートを開いて事前に考えてみてください。</p>
+          </div>
+          
+          <div className="mt-6 flex justify-center">
+            <button 
+              onClick={toggleWorksheetMode}
+              className="px-6 py-3 bg-[#feb47b] text-white rounded-full hover:bg-[#ff7e5f] transition-colors shadow-md"
+            >
+              ワークシートを開く
+            </button>
+          </div>
+        </div>
+      )
+    },
+    
+    // スライド7: 天津金木リーディング
+    {
+      title: "天津金木リーディング",
+      subtitle: "古神道に伝わる秘儀",
+      content: (
+        <div className="flex flex-col h-full overflow-y-auto">
+          <h2 className="text-3xl font-bold mb-6 text-[#ff7e5f]">天津金木リーディング</h2>
+          <div className="bg-white p-6 rounded-lg shadow-md mb-6 hover:shadow-lg transition-shadow">
+            <h3 className="text-xl font-bold mb-3 text-[#feb47b]">天津金木（あまつかなぎ）とは</h3>
+            <p className="mb-2">{amatsuKanagiData.description}</p>
+            <p className="mb-2">古神道の思想にある宇宙の四大源力になぞらえて、現在の在り方が宇宙創造の法則に則っているのかを指し示します。</p>
+            <button 
+              onClick={toggleAmatsuKanagiDetail}
+              className="mt-2 px-4 py-2 bg-[#ffbe76]/30 hover:bg-[#ffbe76]/50 rounded-lg transition-colors text-sm"
+            >
+              詳細を見る
+            </button>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            {amatsuKanagiData.elements.map((element, index) => (
+              <div 
+                key={element.name}
+                className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow"
+              >
+                <h3 className="text-lg font-bold mb-2 text-[#feb47b]">{element.name}</h3>
+                <p className="text-sm mb-3">{element.description}</p>
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="bg-green-100 p-2 rounded-md">
+                    <h4 className="text-xs font-bold text-green-700 mb-1">調和状態</h4>
+                    <p className="text-xs">{element.positive}</p>
+                  </div>
+                  <div className="bg-red-100 p-2 rounded-md">
+                    <h4 className="text-xs font-bold text-red-700 mb-1">不調和状態</h4>
+                    <p className="text-xs">{element.negative}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          
+          <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+            <h3 className="text-xl font-bold mb-3 text-[#feb47b]">ワークショップでのリーディングについて</h3>
+            <p className="mb-4">ワークショップでは、天津金木を使用した現在の自分の状態を見つめるリーディングを行います。このリーディングにより、現在のあなたが宇宙の法則にどう調和しているかを知ることができます。</p>
+            <p>自分を見つめることで課題を浮き彫りにし、理想的な生き方を考えるきっかけとなります。天と地をつなぐ「光の柱」を立てるためには、まず現在の自分の状態を知ることが大切です。</p>
+          </div>
+          
+          <div className="mt-6 flex justify-center">
+            <button 
+              onClick={toggleWorksheetMode}
+              className="px-6 py-3 bg-[#feb47b] text-white rounded-full hover:bg-[#ff7e5f] transition-colors shadow-md"
+            >
+              ワークシートを開く
+            </button>
+          </div>
+        </div>
+      )
+    },
+    
+    // スライド8: ワークショッププログラム
+    {
+      title: "ワークショッププログラム",
+      subtitle: "魂の解放を目指すカリキュラム",
+      content: (
+        <div className="flex flex-col h-full overflow-y-auto">
+          <h2 className="text-3xl font-bold mb-6 text-[#ff7e5f]">本日のワークショッププログラム</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+            <div className="bg-white p-5 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+              <h3 className="text-xl font-bold mb-3 text-[#feb47b]">1. GHJについて</h3>
+              <p className="mb-2">・GHJとは何か、始めた経緯の説明</p>
+              <p className="mb-2">・上映会の内容について説明・質疑応答</p>
+              <p>・これからのGHJについて・コンセプト・目的</p>
+            </div>
+            <div className="bg-white p-5 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+              <h3 className="text-xl font-bold mb-3 text-[#feb47b]">2. 銀河ファミリーマッピングワーク</h3>
+              <p className="mb-2">・銀河ファミリーマッピングの説明</p>
+              <p className="mb-2">・参加者それぞれがどの属性にあるのかを考える</p>
+              <p>・それぞれの特性を見て自分にどんな癖がありどんなふうに変えていきたいか考える</p>
+            </div>
+            <div className="bg-white p-5 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+              <h3 className="text-xl font-bold mb-3 text-[#feb47b]">3. 自分を見つめる天津金木リーディング</h3>
+              <p className="mb-2">・出てくる象意によって現在の意識の持ち方を見つめる</p>
+              <p className="mb-2">・自分を見つめる事で課題を浮き彫りにしていく</p>
+              <p>・理想的な生き方とは？を考える</p>
+            </div>
+            <div className="bg-white p-5 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+              <h3 className="text-xl font-bold mb-3 text-[#feb47b]">4. 在り方を見つめる統合ワーク</h3>
+              <p className="mb-2">・統合とは？についての古神道的考察</p>
+              <p className="mb-2">・統合を考えるワークシート</p>
+              <p>・自分自身の在り方を見つめるワーク</p>
+            </div>
+          </div>
+          <div className="bg-white p-5 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+            <h3 className="text-xl font-bold mb-3 text-[#feb47b]">5. 光の柱を立てる誘導瞑想</h3>
+            <p className="mb-2">・現地＆Zoom参加者同時に行う瞑想</p>
+            <p className="mb-2">・音楽によるヒーリング</p>
+            <p className="mb-2">・大いなる愛と繋がり己を思い出す</p>
+            <p>・大いなる意志と己の魂が一つとなりどう生きるかを考える</p>
+          </div>
+          <div className="mt-6 flex justify-center">
+            <button 
+              onClick={toggleWorksheetMode}
+              className="px-6 py-3 bg-[#feb47b] text-white rounded-full hover:bg-[#ff7e5f] transition-colors shadow-md"
+            >
+              ワークシートを開く
+            </button>
+          </div>
+        </div>
+      )
+    },
+    
+    // スライド9: これからのGHJ
+    {
+      title: "これからのGHJ",
+      subtitle: "ビジョンと展望",
+      content: (
+        <div className="flex flex-col h-full">
+          <h2 className="text-3xl font-bold mb-6 text-[#ff7e5f]">これからのGHJ</h2>
+          <div className="flex flex-col md:flex-row gap-6 flex-1">
+            <div className="flex-1 bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+              <h3 className="text-xl font-bold mb-3 text-[#feb47b]">私たちのビジョン</h3>
+              <p className="mb-4">個々のヒーローズジャーニーの実現は、また大いなる意志のヒーローズジャーニーの実現であり、全ては一つであり愛であることを関わる全ての方々と表現し、実現させることがこのプロジェクトの目的です。</p>
+              <p className="mb-4">誰もが人生そのものと言える輝かしいヒーローズジャーニーを歩んでいます。どんな人にも約束されている輝かしいヒーローズジャーニーを実現することが出来るのです。</p>
+              <p>私たちはそのことを大切な方々に伝え、みんなと輝かしい人生を共有することで輝かしい世界を創造できると考えています。</p>
+            </div>
+            <div className="flex-1 bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+              <h3 className="text-xl font-bold mb-3 text-[#feb47b]">今後の展開</h3>
+              <ul className="list-disc pl-5 space-y-2">
+                <li className="hover:text-[#ff7e5f] transition-colors">定期的な上映会の開催</li>
+                <li className="hover:text-[#ff7e5f] transition-colors">ワークショップの全国展開</li>
+                <li className="hover:text-[#ff7e5f] transition-colors">オンラインコミュニティの形成</li>
+                <li className="hover:text-[#ff7e5f] transition-colors">オラクルカードの作成</li>
+                <li className="hover:text-[#ff7e5f] transition-colors">銀河ファミリーマッピングの深化</li>
+                <li className="hover:text-[#ff7e5f] transition-colors">ヒーリング音楽の制作・配信</li>
+                <li className="hover:text-[#ff7e5f] transition-colors">個人の魂の開放をサポートする活動</li>
+              </ul>
+            </div>
+          </div>
+          <div className="mt-6 p-4 rounded-lg text-center bg-[#ffbe76]/40 hover:bg-[#ffbe76]/60 transition-all">
+            <p className="font-bold">Only Love Is REAL ―― 全ては一つであり愛である</p>
+          </div>
+        </div>
+      )
+    },
+    
+    // スライド10: お問い合わせ
+    {
+      title: "お問い合わせ",
+      subtitle: "ワークショップ参加申し込み",
+      content: (
+        <div className="flex flex-col h-full overflow-y-auto">
+          <h2 className="text-3xl font-bold mb-6 text-[#ff7e5f]">お問い合わせ</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="bg-white p-6 rounded-lg shadow-md">
+              <h3 className="text-xl font-bold mb-4 text-[#feb47b]">ワークショップ詳細</h3>
+              <div className="space-y-4">
+                <div>
+                  <h4 className="font-bold text-[#4a3933] mb-1">日時</h4>
+                  <p>2025年3月30日（日）13時〜16時</p>
+                  <p className="text-sm text-gray-600">15分前（12:45）からお入りいただけます</p>
+                </div>
+                <div>
+                  <h4 className="font-bold text-[#4a3933] mb-1">会場</h4>
+                  <p>台所たまねぎ（2階スペース）</p>
+                  <p className="text-sm text-gray-600">東京都世田谷区奥沢３丁目３１−１０</p>
+                  <p className="text-sm text-gray-600">東急目黒線「奥沢駅」 徒歩3分</p>
+                </div>
+                <div>
+                  <h4 className="font-bold text-[#4a3933] mb-1">参加費</h4>
+                  <p>現地参加（1ドリンク込み）：3,000円</p>
+                  <p>オンラインZoom参加：1,000円</p>
+                </div>
+                <div>
+                  <h4 className="font-bold text-[#4a3933] mb-1">お申し込み方法</h4>
+                  <p>下記フォームまたはメールにてお申し込みください</p>
+                  <p className="text-sm text-gray-600">定員：会場10名／オンライン20名</p>
+                </div>
+              </div>
+            </div>
+            
+            <div className="bg-white p-6 rounded-lg shadow-md">
+              <h3 className="text-xl font-bold mb-4 text-[#feb47b]">お問い合わせフォーム</h3>
+              <form className="space-y-4">
+                <div>
+                  <label htmlFor="name" className="block text-sm font-medium mb-1">お名前 <span className="text-red-500">*</span></label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#ff7e5f]"
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium mb-1">メールアドレス <span className="text-red-500">*</span></label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#ff7e5f]"
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <label htmlFor="participationType" className="block text-sm font-medium mb-1">参加タイプ</label>
+                  <select
+                    id="participationType"
+                    name="participationType"
+                    className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#ff7e5f]"
+                  >
+                    <option value="venue">会場参加</option>
+                    <option value="online">オンライン参加</option>
+                    <option value="inquiry">お問い合わせのみ</option>
+                  </select>
+                </div>
+                
+                <div>
+                  <label htmlFor="message" className="block text-sm font-medium mb-1">メッセージ</label>
+                  <textarea
+                    id="message"
+                    name="message"
+                    rows={4}
+                    className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#ff7e5f]"
+                    placeholder="ご質問や参加希望の日時などをご記入ください"
+                  ></textarea>
+                </div>
+                
+                <button
+                  type="submit"
+                  className="w-full py-2 px-4 bg-[#ff7e5f] text-white rounded-md hover:bg-[#ff7e5f]/80 transition-colors"
+                >
+                  送信する
+                </button>
+              </form>
+            </div>
+          </div>
+          
+          <div className="mt-6 p-5 bg-[#fff9f5] rounded-lg shadow-md text-center">
+            <h3 className="text-lg font-bold mb-2 text-[#ff7e5f]">お問い合わせ先</h3>
+            <p className="mb-1">グレイトヒーローズジャーニー事務局</p>
+            <p>info@greatherosjourney.jp</p>
+          </div>
+        </div>
+      )
+    }
+  ];
 
   // ワークシートコンポーネント
   const WorksheetComponent = () => {
     return (
-      <motion.div 
-        className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4" 
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-      >
-        <motion.div 
-          className="bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto p-6"
-          initial={{ scale: 0.9, y: 50 }}
-          animate={{ scale: 1, y: 0 }}
-          exit={{ scale: 0.9, y: 50 }}
-        >
+      <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
+        <div className="bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto p-6">
           <div className="flex justify-between items-center mb-6 sticky top-0 bg-white py-2 border-b border-[#ffbe76]/30">
             <h2 className="text-2xl font-bold text-[#ff7e5f]">ワークシート: {worksheetData[worksheetIndex].title}</h2>
             <div className="flex space-x-2">
@@ -1058,13 +804,7 @@ const GHJPresentation: React.FC = () => {
           
           <div className="space-y-6">
             {userWorksheet[worksheetIndex].map((item, idx) => (
-              <motion.div 
-                key={idx}
-                className="bg-[#fff9f5] p-4 rounded-lg"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.1 + idx * 0.1 }}
-              >
+              <div key={idx} className="bg-[#fff9f5] p-4 rounded-lg">
                 <h3 className="font-bold mb-2 text-[#4a3933]">{item.question}</h3>
                 <textarea
                   value={item.answer}
@@ -1072,16 +812,11 @@ const GHJPresentation: React.FC = () => {
                   className="w-full p-3 border border-[#ffbe76]/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff7e5f] min-h-[100px]"
                   placeholder="ここに記入してください..."
                 />
-              </motion.div>
+              </div>
             ))}
           </div>
           
-          <motion.div 
-            className="mt-8 flex justify-between"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.6 }}
-          >
+          <div className="mt-8 flex justify-between">
             <button
               onClick={() => worksheetIndex > 0 && setWorksheetIndex(worksheetIndex - 1)}
               className={`px-4 py-2 rounded-lg ${worksheetIndex > 0 ? 'bg-[#feb47b] text-white hover:bg-[#ff7e5f]' : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}
@@ -1096,9 +831,9 @@ const GHJPresentation: React.FC = () => {
             >
               次のセクション
             </button>
-          </motion.div>
-        </motion.div>
-      </motion.div>
+          </div>
+        </div>
+      </div>
     );
   };
 
@@ -1107,19 +842,8 @@ const GHJPresentation: React.FC = () => {
     if (!selectedGalaxyFamily) return null;
 
     return (
-      <motion.div 
-        className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4" 
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-      >
-        <motion.div 
-          className="bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto p-6"
-          variants={modalVariants}
-          initial="hidden"
-          animate="visible"
-          exit="exit"
-        >
+      <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
+        <div className="bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto p-6">
           <div className="flex justify-between items-center mb-6 sticky top-0 bg-white py-2 border-b border-[#ffbe76]/30">
             <h2 className="text-2xl font-bold text-[#ff7e5f]">{selectedGalaxyFamily.name}種族</h2>
             <button 
@@ -1225,27 +949,16 @@ const GHJPresentation: React.FC = () => {
               </ul>
             </div>
           </div>
-        </motion.div>
-      </motion.div>
+        </div>
+      </div>
     );
   };
 
   // 天津金木詳細モーダル
   const AmatsuKanagiDetailModal = () => {
     return (
-      <motion.div 
-        className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4" 
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-      >
-        <motion.div 
-          className="bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto p-6"
-          variants={modalVariants}
-          initial="hidden"
-          animate="visible"
-          exit="exit"
-        >
+      <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
+        <div className="bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto p-6">
           <div className="flex justify-between items-center mb-6 sticky top-0 bg-white py-2 border-b border-[#ffbe76]/30">
             <h2 className="text-2xl font-bold text-[#ff7e5f]">{amatsuKanagiData.title}</h2>
             <button 
@@ -1293,8 +1006,8 @@ const GHJPresentation: React.FC = () => {
               <p>只存在するのは『今ここ』に在るあなたです。</p>
             </div>
           </div>
-        </motion.div>
-      </motion.div>
+        </div>
+      </div>
     );
   };
 
@@ -1358,29 +1071,9 @@ const GHJPresentation: React.FC = () => {
               {/* デバッグ情報 */}
               <div className="text-xs text-gray-400 mb-2">現在のスライド: {currentSlide + 1}</div>
               
-              {/* スライド内容 - 簡略化したコンテンツレンダリング */}
+              {/* スライド内容 */}
               <div className="h-full">
-                {(() => {
-                  debugSlide(currentSlide);
-                  try {
-                    return slides[currentSlide].content({
-                      toggleWorksheetMode,
-                      showGalaxyFamilyDetail,
-                      toggleAmatsuKanagiDetail
-                    });
-                  } catch (error) {
-                    console.error(`スライド ${currentSlide + 1} でエラーが発生しました:`, error);
-                    return (
-                      <div className="p-4 bg-red-100 rounded-lg">
-                        <h3 className="text-red-600 font-bold">エラーが発生しました</h3>
-                        <p>このスライドの表示中に問題が発生しました。</p>
-                        <pre className="mt-2 p-2 bg-white rounded text-xs overflow-auto">
-                          {error instanceof Error ? error.message : "Unknown error"}
-                        </pre>
-                      </div>
-                    );
-                  }
-                })()}
+                {slides[currentSlide].content}
               </div>
             </div>
             
@@ -1424,11 +1117,9 @@ const GHJPresentation: React.FC = () => {
       </footer>
       
       {/* モーダル */}
-      <AnimatePresence>
-        {worksheetMode && <WorksheetComponent />}
-        {galaxyFamilyDetailMode && <GalaxyFamilyDetailModal />}
-        {amatsuKanagiDetailMode && <AmatsuKanagiDetailModal />}
-      </AnimatePresence>
+      {worksheetMode && <WorksheetComponent />}
+      {galaxyFamilyDetailMode && <GalaxyFamilyDetailModal />}
+      {amatsuKanagiDetailMode && <AmatsuKanagiDetailModal />}
     </div>
   );
 };
