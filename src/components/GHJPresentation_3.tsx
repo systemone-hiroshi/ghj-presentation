@@ -154,7 +154,6 @@ const GHJPresentation: React.FC = () => {
   const [userWorksheet, setUserWorksheet] = useState<WorksheetItem[][]>(
     worksheetData.map(section => section.items.map(item => ({ ...item })))
   );
-  const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   // イベントハンドラ
   const handleWorksheetChange = useCallback((sectionIndex: number, itemIndex: number, value: string) => {
@@ -803,7 +802,7 @@ const GHJPresentation: React.FC = () => {
             </div>
           </div>
           
-          <div className="space-y-6 pb-20">
+          <div className="space-y-6">
             {userWorksheet[worksheetIndex].map((item, idx) => (
               <div key={idx} className="bg-[#fff9f5] p-4 rounded-lg">
                 <h3 className="font-bold mb-2 text-[#4a3933]">{item.question}</h3>
@@ -817,7 +816,7 @@ const GHJPresentation: React.FC = () => {
             ))}
           </div>
           
-          <div className="sticky bottom-0 mt-8 py-4 bg-white border-t flex justify-between">
+          <div className="mt-8 flex justify-between">
             <button
               onClick={() => worksheetIndex > 0 && setWorksheetIndex(worksheetIndex - 1)}
               className={`px-4 py-2 rounded-lg ${worksheetIndex > 0 ? 'bg-[#feb47b] text-white hover:bg-[#ff7e5f]' : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}
@@ -845,7 +844,7 @@ const GHJPresentation: React.FC = () => {
     return (
       <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
         <div className="bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto p-6">
-          <div className="flex justify-between items-center mb-6 sticky top-0 bg-white py-2 border-b border-[#ffbe76]/30 z-10">
+          <div className="flex justify-between items-center mb-6 sticky top-0 bg-white py-2 border-b border-[#ffbe76]/30">
             <h2 className="text-2xl font-bold text-[#ff7e5f]">{selectedGalaxyFamily.name}種族</h2>
             <button 
               onClick={closeGalaxyFamilyDetail}
@@ -855,7 +854,7 @@ const GHJPresentation: React.FC = () => {
             </button>
           </div>
           
-          <div className="space-y-6 pb-20">
+          <div className="space-y-6">
             <div className="bg-[#fff9f5] p-6 rounded-lg">
               <h3 className="text-xl font-bold mb-3 text-[#feb47b]">基本情報</h3>
               <p className="mb-4">{selectedGalaxyFamily.description}</p>
@@ -950,16 +949,6 @@ const GHJPresentation: React.FC = () => {
               </ul>
             </div>
           </div>
-          
-          {/* 常に表示されるフッターボタン */}
-          <div className="sticky bottom-0 py-4 bg-white border-t flex justify-center">
-            <button 
-              onClick={closeGalaxyFamilyDetail}
-              className="px-6 py-2 bg-[#ff7e5f] text-white rounded-lg"
-            >
-              閉じる
-            </button>
-          </div>
         </div>
       </div>
     );
@@ -970,7 +959,7 @@ const GHJPresentation: React.FC = () => {
     return (
       <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
         <div className="bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto p-6">
-          <div className="flex justify-between items-center mb-6 sticky top-0 bg-white py-2 border-b border-[#ffbe76]/30 z-10">
+          <div className="flex justify-between items-center mb-6 sticky top-0 bg-white py-2 border-b border-[#ffbe76]/30">
             <h2 className="text-2xl font-bold text-[#ff7e5f]">{amatsuKanagiData.title}</h2>
             <button 
               onClick={toggleAmatsuKanagiDetail}
@@ -980,7 +969,7 @@ const GHJPresentation: React.FC = () => {
             </button>
           </div>
           
-          <div className="space-y-6 pb-20">
+          <div className="space-y-6">
             <div className="bg-[#fff9f5] p-6 rounded-lg">
               <h3 className="text-xl font-bold mb-3 text-[#feb47b]">天津金木とは</h3>
               <p className="mb-4">{amatsuKanagiData.description}</p>
@@ -1017,16 +1006,6 @@ const GHJPresentation: React.FC = () => {
               <p>只存在するのは『今ここ』に在るあなたです。</p>
             </div>
           </div>
-          
-          {/* 常に表示されるフッターボタン */}
-          <div className="sticky bottom-0 py-4 bg-white border-t flex justify-center">
-            <button 
-              onClick={toggleAmatsuKanagiDetail}
-              className="px-6 py-2 bg-[#ff7e5f] text-white rounded-lg"
-            >
-              閉じる
-            </button>
-          </div>
         </div>
       </div>
     );
@@ -1034,8 +1013,8 @@ const GHJPresentation: React.FC = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-br from-[#ffe8dc] to-[#ffcab0]">
-      {/* ヘッダー - 固定 */}
-      <header className="fixed top-0 left-0 right-0 z-10 bg-white shadow-md py-3 px-5 flex justify-between items-center">
+      {/* ヘッダー */}
+      <header className="bg-white shadow-md py-3 px-5 flex justify-between items-center">
         <h1 className="text-xl font-bold text-[#ff7e5f]">
           グレイトヒーローズジャーニー
         </h1>
@@ -1044,8 +1023,8 @@ const GHJPresentation: React.FC = () => {
         </div>
       </header>
       
-      {/* メインコンテンツ - ヘッダーとフッターの高さを考慮したパディング */}
-      <main className="flex-1 flex pt-16 pb-20">
+      {/* メインコンテンツ */}
+      <main className="flex-1 flex">
         {/* サイドナビゲーション */}
         <div className="w-56 bg-white shadow-md hidden md:block p-4 overflow-y-auto">
           <div className="mb-6">
@@ -1082,13 +1061,13 @@ const GHJPresentation: React.FC = () => {
         <div className="flex-1 p-5">
           <div className="bg-white rounded-lg shadow-lg h-full overflow-hidden flex flex-col">
             {/* スライドタイトル */}
-            <div className="bg-gradient-to-r from-[#ff7e5f] to-[#feb47b] text-white p-4 sticky top-0 z-10">
+            <div className="bg-gradient-to-r from-[#ff7e5f] to-[#feb47b] text-white p-4">
               <h2 className="text-xl font-bold">{slides[currentSlide].title}</h2>
               <p className="text-sm opacity-90">{slides[currentSlide].subtitle}</p>
             </div>
             
             {/* スライドコンテンツ */}
-            <div className="flex-1 p-6 overflow-y-auto pb-16">
+            <div className="flex-1 p-6 overflow-y-auto">
               {/* デバッグ情報 */}
               <div className="text-xs text-gray-400 mb-2">現在のスライド: {currentSlide + 1}</div>
               
@@ -1097,97 +1076,45 @@ const GHJPresentation: React.FC = () => {
                 {slides[currentSlide].content}
               </div>
             </div>
+            
+            {/* スライドナビゲーション */}
+            <div className="p-4 border-t flex justify-between items-center">
+              <button
+                onClick={prevSlide}
+                disabled={currentSlide === 0}
+                className={`px-4 py-2 rounded-lg ${
+                  currentSlide === 0 
+                    ? 'bg-gray-200 text-gray-400 cursor-not-allowed' 
+                    : 'bg-[#feb47b] text-white hover:bg-[#ff7e5f] transition-colors'
+                }`}
+              >
+                前へ
+              </button>
+              
+              <div className="text-gray-600">
+                {currentSlide + 1} / {slides.length}
+              </div>
+              
+              <button
+                onClick={nextSlide}
+                disabled={currentSlide === slides.length - 1}
+                className={`px-4 py-2 rounded-lg ${
+                  currentSlide === slides.length - 1 
+                    ? 'bg-gray-200 text-gray-400 cursor-not-allowed' 
+                    : 'bg-[#feb47b] text-white hover:bg-[#ff7e5f] transition-colors'
+                }`}
+              >
+                次へ
+              </button>
+            </div>
           </div>
         </div>
       </main>
       
-      {/* ナビゲーションフッター - 固定 */}
-      <div className="fixed bottom-0 left-0 right-0 z-10 bg-white border-t p-4 flex justify-between items-center">
-        <button
-          onClick={prevSlide}
-          disabled={currentSlide === 0}
-          className={`px-4 py-2 rounded-lg ${
-            currentSlide === 0 
-              ? 'bg-gray-200 text-gray-400 cursor-not-allowed' 
-              : 'bg-[#feb47b] text-white hover:bg-[#ff7e5f] transition-colors'
-          }`}
-        >
-          前へ
-        </button>
-        
-        <div className="text-gray-600">
-          {currentSlide + 1} / {slides.length}
-        </div>
-        
-        <button
-          onClick={nextSlide}
-          disabled={currentSlide === slides.length - 1}
-          className={`px-4 py-2 rounded-lg ${
-            currentSlide === slides.length - 1 
-              ? 'bg-gray-200 text-gray-400 cursor-not-allowed' 
-              : 'bg-[#feb47b] text-white hover:bg-[#ff7e5f] transition-colors'
-          }`}
-        >
-          次へ
-        </button>
-      </div>
-      
-      {/* モバイル用スライド選択ボタン */}
-      <div className="md:hidden fixed right-4 bottom-20 z-20">
-        <button 
-          onClick={() => setMobileNavOpen(!mobileNavOpen)}
-          className="bg-[#ff7e5f] text-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg"
-        >
-          <span className="text-xl">≡</span>
-        </button>
-      </div>
-      
-      {/* モバイル用ナビゲーションパネル */}
-      {mobileNavOpen && (
-        <div className="md:hidden fixed inset-0 z-30 bg-black/70 flex items-end">
-          <div className="bg-white w-full rounded-t-xl p-5 max-h-[80vh] overflow-y-auto">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="font-bold text-xl text-[#ff7e5f]">スライド選択</h3>
-              <button 
-                onClick={() => setMobileNavOpen(false)}
-                className="text-gray-500 text-2xl"
-              >
-                ×
-              </button>
-            </div>
-            <div className="grid grid-cols-2 gap-3">
-              {slides.map((slide, index) => (
-                <button
-                  key={index}
-                  onClick={() => {
-                    goToSlide(index);
-                    setMobileNavOpen(false);
-                  }}
-                  className={`p-3 rounded-lg text-left ${
-                    currentSlide === index 
-                      ? 'bg-[#ff7e5f] text-white' 
-                      : 'bg-gray-100 hover:bg-gray-200'
-                  }`}
-                >
-                  <div className="text-xs">{index + 1}</div>
-                  <div className="font-medium">{slide.title}</div>
-                </button>
-              ))}
-            </div>
-            <div className="mt-4">
-              <button 
-                onClick={() => {
-                  toggleWorksheetMode();
-                  setMobileNavOpen(false);
-                }}
-                className="w-full py-3 bg-[#feb47b] text-white rounded-lg"
-              >
-                ワークシートを開く
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* フッター */}
+      <footer className="bg-[#4a3933] text-white text-center py-3 text-sm">
+        <p>© 2025 GREAT HERO'S JOURNEY All Rights Reserved.</p>
+      </footer>
       
       {/* モーダル */}
       {worksheetMode && <WorksheetComponent />}
