@@ -366,9 +366,9 @@ const GHJPresentation = () => {
               <div className="p-3 bg-orange-50 rounded-lg">
                 <p className="font-bold mb-1 text-center">持ち物</p>
                 <ul className="text-sm space-y-1 list-disc pl-4">
-                  <li>筆記用具</li>
-                  <li>ノート</li>
-                  <li>水分補給用の飲み物</li>
+                  <li>筆記用具など(任意)</li>
+                  <li></li>
+                  <li></li>
                 </ul>
               </div>
             </div>
